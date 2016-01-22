@@ -16,10 +16,10 @@ def build_xml(root, result):
     ET.SubElement(e, 'query').text = result['qstr']
 
 
-def query_solr(query):
+def query_solr(query, n):
     f = {
         'q': query,
-        'rows': 5,
+        'rows': n,
         'start': 0,
         #'qt': 'dismax',
         #&hl=true&hl.fragsize=300
@@ -53,20 +53,20 @@ def query_solr(query):
     return results
 
 
-def process_one_query(root, query):
-    results = query_solr(query)
+def process_one_query(root, query, n):
+    results = query_solr(query, n)
 
     for result in results:
         build_xml(root, result)
 
 
-def process(inputfile, outputfile):
+def process(inputfile, outputfile, n):
     root = ET.Element("root")
 
     with open(inputfile) as ins:
         for line in ins:
             query = line.strip()
-            process_one_query(root, query)
+            process_one_query(root, query, n)
 
     tree = ET.ElementTree(root)
     tree.write(outputfile)
@@ -76,9 +76,10 @@ def main():
     parser = argparse.ArgumentParser(description='Query Solr and save results as XML for TREC OpenSearch.')
     parser.add_argument('--input', required=True, help='specify input file')
     parser.add_argument('--output', required=True, help='specify output file')
+    parser.add_argument('--num', required=True, help='number of results for each query')
 
     args = parser.parse_args()
-    process(args.input, args.output)
+    process(args.input, args.output, int(args.num))
 
 
 if __name__ == '__main__':
