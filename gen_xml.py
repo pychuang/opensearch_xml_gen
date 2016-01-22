@@ -3,12 +3,20 @@ import json
 import urllib
 import urllib2
 
+#from lxml import etree
+import xml.etree.cElementTree as ET
+
 SOLR_URL='http://localhost:8080/solr/citeseerx/select'
+
+def build_xml(root, result):
+    e = ET.SubElement(root, 'topic')
+    e.attrib['number'] = result['site_qid']
+    ET.SubElement(e, 'query').text = result['qstr']
 
 def query_solr(query):
     f = {
         'q': query,
-        'rows': 10,
+        'rows': 5,
         'start': 0,
         #'qt': 'dismax',
         #&hl=true&hl.fragsize=300
@@ -42,8 +50,13 @@ def query_solr(query):
     return results
 
 def main():
-    data = query_solr('machine learning')
-    print data
+    results = query_solr('machine learning')
+    print results
+
+    root = ET.Element("root")
+    for result in results:
+        build_xml(root, result)
+    print ET.tostring(root)
 
 if __name__ == '__main__':
     main()
