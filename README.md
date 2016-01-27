@@ -1,5 +1,5 @@
 # usage
-$ ./gen_xml.py --input queries.txt --output test.xml
+$ ./gen_xml.py --input queries.txt --num 100
 
 # pretty print XML
-$ cat test.xml | xmllint --format -
+cat qlist.xml | xmllint --format - > pretty_qlist.xml
