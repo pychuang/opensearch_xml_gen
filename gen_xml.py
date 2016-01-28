@@ -90,10 +90,10 @@ def save_doclist(runfile, docdir, qid, solrdocs):
         f.write(content)
 
 
-def process(inputfile, n):
-    qlist_file_name = "qlist.xml"
+def process(inputfile, n, outputfile):
+    qlist_file_name = outputfile + ".xml"
     docdir = "docdir"
-    runfile_name = "doclist.runfile"
+    runfile_name = outputfile + ".runfile"
     if not os.path.exists(docdir):
         os.makedirs(docdir)
 
@@ -114,10 +114,11 @@ def process(inputfile, n):
 def main():
     parser = argparse.ArgumentParser(description='Query Solr and save results as XML for TREC OpenSearch.')
     parser.add_argument('--input', required=True, help='specify input file')
+    parser.add_argument('--output', required=True, help='specify output file')
     parser.add_argument('--num', required=True, help='number of results for each query')
 
     args = parser.parse_args()
-    process(args.input, int(args.num))
+    process(args.input, int(args.num), args.output)
 
 
 if __name__ == '__main__':
