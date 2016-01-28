@@ -74,7 +74,10 @@ def save_doclist(runfile, docdir, qid, solrdocs):
             continue
         docid = doc['doi']
         title = doc['title']
-        abstract = doc['abstract']
+        if 'abstract' in doc:
+            abstract = doc['abstract']
+        else:
+            abstract = ''
 
         # doclist run file
         line = ' '.join([qid, "dontcare", docid, "dontcare", "dontcare", "dontcare"]) + "\n"
