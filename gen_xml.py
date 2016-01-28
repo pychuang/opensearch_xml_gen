@@ -11,8 +11,8 @@ import urllib2
 import xml.etree.cElementTree as ET
 
 
-SOLR_URL='http://localhost:8080/solr/citeseerx/select'
-
+SOLR_URL='http://csxindex03.ist.psu.edu:8080/solr/citeseerx/select'
+REPOSITORY='/repository'
 
 def generate_site_query_id(query):
     return hashlib.sha1(query).hexdigest()
@@ -49,19 +49,42 @@ def build_query_list_xml(root, qid, query):
     ET.SubElement(e, 'query').text = query
 
 
+def path_for_document(doi):
+    splitted_doi = doi.split('.')
+    dirpath = os.path.join(REPOSITORY, *splitted_doi)
+    filepath = os.path.join(dirpath, doi + '.body')
+    if not os.path.exists(filepath):
+        filepath = os.path.join(dirpath, doi + '.txt')
+        if not os.path.exists(filepath):
+            return None
+    return filepath
+
+
+def get_document_content(doi):
+    path = path_for_document(doi)
+    if not path:
+        return None
+    with codecs.open(path, 'r', 'utf-8') as f:
+        return f.read()
+
+
 def save_doclist(runfile, docdir, qid, solrdocs):
     for doc in solrdocs:
         if 'doi' not in doc:
             continue
         docid = doc['doi']
         title = doc['title']
-        content = doc['abstract']
+        abstract = doc['abstract']
 
         # doclist run file
         line = ' '.join([qid, "dontcare", docid, "dontcare", "dontcare", "dontcare"]) + "\n"
         runfile.write(line)
 
         # docs
+        content = get_document_content(docid)
+        if not content:
+            content = abstract
+
         f = codecs.open(os.path.join(docdir, docid), "w", "utf-8")
         f.write(title + "\n")
         f.write(content)
