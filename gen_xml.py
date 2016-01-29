@@ -73,6 +73,8 @@ def save_doclist(runfile, docdir, qid, solrdocs):
         if 'doi' not in doc:
             continue
         docid = doc['doi']
+        if 'title' not in doc:
+            continue
         title = doc['title']
         if 'abstract' in doc:
             abstract = doc['abstract']
