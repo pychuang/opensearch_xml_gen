@@ -2,6 +2,7 @@
 
 import argparse
 import codecs
+import chardet
 import hashlib
 import json
 import os
@@ -64,7 +65,16 @@ def get_document_content(doi):
     path = path_for_document(doi)
     if not path:
         return None
-    with codecs.open(path, 'r', 'utf-8') as f:
+
+    with open(path, 'rb') as f:
+        raw = f.read(32)
+        if raw.startswith(codecs.BOM_UTF8):
+            encoding = 'utf-8-sig'
+        else:
+            result = chardet.detect(raw)
+            encoding = result['encoding']
+
+    with codecs.open(path, 'r', encoding) as f:
         return f.read()
 
 
