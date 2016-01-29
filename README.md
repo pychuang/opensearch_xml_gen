@@ -1,6 +1,6 @@
 # usage
 ```
-$ ./gen_xml.py --input queries.txt --output train --num 100
+$ ./gen_xml.py --input queries.txt --output train --docdir train.docdir --num 100
 ```
 
 # pretty print XML
