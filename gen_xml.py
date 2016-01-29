@@ -23,7 +23,7 @@ def query_solr(query, n):
         'q': query,
         'rows': n,
         'start': 0,
-        #'qt': 'dismax',
+        'qt': 'dismax',
         #&hl=true&hl.fragsize=300
         'wt': 'json',
         'fq': 'incol:true'
