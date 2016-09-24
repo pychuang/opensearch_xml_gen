@@ -72,7 +72,7 @@ def get_document_content(doi):
         else:
             encoding = 'utf-8'
 
-    with codecs.open(path, 'r', encoding) as f:
+    with codecs.open(path, 'r', encoding, 'replace') as f:
         return f.read()
 
 
